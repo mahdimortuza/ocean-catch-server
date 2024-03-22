@@ -23,6 +23,4 @@ const createProductValidation = z.object({
   }),
 });
 
-export const ProductValidation = {
-  createProductValidation,
-};
+export default createProductValidation;
