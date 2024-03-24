@@ -8,6 +8,9 @@ const createProductValidation = z.object({
     image: z.string({
       invalid_type_error: 'Image must be a string',
     }),
+    optImage1: z.string().optional(),
+    optImage2: z.string().optional(),
+    optImage3: z.string().optional(),
     price: z.number({
       invalid_type_error: 'Price must be a number',
     }),

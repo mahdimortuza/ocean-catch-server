@@ -12,6 +12,15 @@ const productSchema = new Schema<TProduct>(
       type: String,
       required: [true, 'Product image is required'],
     },
+    optImage1: {
+      type: String,
+    },
+    optImage2: {
+      type: String,
+    },
+    optImage3: {
+      type: String,
+    },
     price: {
       type: Number,
       required: [true, 'Product price is required'],
