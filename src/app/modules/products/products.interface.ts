@@ -9,4 +9,5 @@ export type TProduct = {
   ratings: number;
   description: string;
   flashSale: boolean;
+  offer?: number;
 };

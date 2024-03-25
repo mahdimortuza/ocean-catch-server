@@ -23,6 +23,8 @@ const createProductValidation = z.object({
     description: z.string({
       invalid_type_error: 'Description must be a string',
     }),
+
+    offer: z.number().optional(),
   }),
 });
 
