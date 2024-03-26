@@ -6,8 +6,17 @@ const createProductIntoDb = async (payload: TProduct) => {
   return result;
 };
 
-const getAllProductsFromDb = async () => {
-  const result = await Product.find();
+const getAllProductsFromDb = async (filters: any) => {
+  let query = Product.find();
+
+  if (filters.category) {
+    query = query.where('category').equals(filters.category);
+  }
+  if (filters.title) {
+    query = query.where('title').equals(filters.title);
+  }
+
+  const result = await query.exec();
   return result;
 };
 
