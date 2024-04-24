@@ -1,4 +1,6 @@
+import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
+import config from '../../config';
 import { TRole, TUser } from './user.interface';
 
 const role: TRole[] = ['user', 'admin'];
@@ -30,5 +32,19 @@ const userSchema = new Schema<TUser>(
   },
 );
 
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
 
-export const User =  model< TUser, >
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+export const User = model<TUser>('user', userSchema);
