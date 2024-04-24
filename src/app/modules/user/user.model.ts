@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import config from '../../config';
-import { TRole, TUser } from './user.interface';
+import { TRole, TUser, UserModelForStatics } from './user.interface';
 
 const role: TRole[] = ['user', 'admin'];
 
@@ -47,4 +47,15 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-export const User = model<TUser>('user', userSchema);
+userSchema.statics.isUserExistsByUserEmail = async function (email: string) {
+  return await User.findOne({ email }).select('+password');
+};
+
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword,
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+export const User = model<TUser, UserModelForStatics>('User', userSchema);
