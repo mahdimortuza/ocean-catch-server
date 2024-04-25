@@ -1,4 +1,5 @@
 import express from 'express';
+import auth from '../../middleware/auth';
 import validateRequest from '../../middleware/validateRequest';
 import { ProductController } from './products.controller';
 import createProductValidation from './products.validation';
@@ -9,7 +10,7 @@ router.post(
   validateRequest(createProductValidation),
   ProductController.createProduct,
 );
-router.get('/', ProductController.getAllProducts);
+router.get('/', auth(), ProductController.getAllProducts);
 router.get('/:id', ProductController.getSingleProduct);
 router.patch('/:id', ProductController.updateSingleProduct);
 router.delete('/:id', ProductController.deleteSingleProduct);

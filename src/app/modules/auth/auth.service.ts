@@ -14,7 +14,7 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(404, 'Password did not matched.');
 
   const jwtPayload = {
-    userName: user.email,
+    email: user.email,
     role: user.role,
   };
 
