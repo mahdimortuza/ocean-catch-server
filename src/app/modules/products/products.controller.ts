@@ -16,7 +16,7 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getAllProducts = catchAsync(async (req: Request, res: Response) => {
-  console.log('test', req.user);
+  console.log('cookie', req.cookies);
 
   const filters = req.query;
   const result = await ProductServices.getAllProductsFromDb(filters);
