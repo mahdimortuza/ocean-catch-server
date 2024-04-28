@@ -8,12 +8,21 @@ const router = express.Router();
 
 router.post(
   '/create-product',
+  auth(USER_ROLE.admin),
   validateRequest(createProductValidation),
   ProductController.createProduct,
 );
-router.get('/', auth(USER_ROLE.admin), ProductController.getAllProducts);
+router.get('/', ProductController.getAllProducts);
 router.get('/:id', ProductController.getSingleProduct);
-router.patch('/:id', ProductController.updateSingleProduct);
-router.delete('/:id', ProductController.deleteSingleProduct);
+router.patch(
+  '/:id',
+  auth(USER_ROLE.admin),
+  ProductController.updateSingleProduct,
+);
+router.delete(
+  '/:id',
+  auth(USER_ROLE.admin),
+  ProductController.deleteSingleProduct,
+);
 
 export const ProductsRoute = router;
