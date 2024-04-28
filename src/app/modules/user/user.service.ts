@@ -11,7 +11,17 @@ const getAllUserFromDb = async () => {
   return result;
 };
 
+const getMe = async (email: string, role: string) => {
+  let result = null;
+  if (role) {
+    result = await User.findOne({ email });
+  }
+
+  return result;
+};
+
 export const UserServices = {
   createUserIntoDb,
   getAllUserFromDb,
+  getMe,
 };
