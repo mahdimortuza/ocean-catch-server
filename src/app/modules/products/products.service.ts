@@ -6,17 +6,19 @@ const createProductIntoDb = async (payload: TProduct) => {
   return result;
 };
 
-const getAllProductsFromDb = async (filters: any) => {
-  let query = Product.find();
+const getAllProductsFromDb = async (query: Record<string, unknown>) => {
+  const productSearchAbleFields = ['title', 'category'];
 
-  if (filters.category) {
-    query = query.where('category').equals(filters.category);
+  let searchTerm = '';
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
   }
-  if (filters.title) {
-    query = query.where('title').equals(filters.title);
-  }
+  const result = await Product.find({
+    $or: productSearchAbleFields.map((field) => ({
+      [field]: { $regex: searchTerm, $options: 'i' },
+    })),
+  });
 
-  const result = await query.exec();
   return result;
 };
 
