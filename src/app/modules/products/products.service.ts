@@ -1,3 +1,5 @@
+import QueryBuilder from '../../builder/QueryBuilder';
+import { productSearchAbleFields } from './products.constant';
 import { TProduct } from './products.interface';
 import { Product } from './products.model';
 
@@ -7,52 +9,59 @@ const createProductIntoDb = async (payload: TProduct) => {
 };
 
 const getAllProductsFromDb = async (query: Record<string, unknown>) => {
-  const queryObj = { ...query };
+  // const queryObj = { ...query };
 
-  const productSearchAbleFields = ['title', 'category'];
+  // let searchTerm = '';
+  // if (query?.searchTerm) {
+  //   searchTerm = query?.searchTerm as string;
+  // }
+  // const searchQuery = Product.find({
+  //   $or: productSearchAbleFields.map((field) => ({
+  //     [field]: { $regex: searchTerm, $options: 'i' },
+  //   })),
+  // });
 
-  let searchTerm = '';
-  if (query?.searchTerm) {
-    searchTerm = query?.searchTerm as string;
-  }
-  const searchQuery = Product.find({
-    $or: productSearchAbleFields.map((field) => ({
-      [field]: { $regex: searchTerm, $options: 'i' },
-    })),
-  });
+  // // filtering;
+  // const excludeFields = ['searchTerm', 'sort', 'limit', 'page'];
 
-  //filtering
-  const excludeFields = ['searchTerm', 'sort', 'limit', 'page'];
+  // excludeFields.forEach((el) => delete queryObj[el]);
 
-  excludeFields.forEach((el) => delete queryObj[el]);
+  // // sorting
+  // const filterQuery = searchQuery.find(queryObj);
 
-  // sorting
-  const filterQuery = searchQuery.find(queryObj);
+  // let sort = '-price';
+  // if (query.sort) {
+  //   sort = query.sort as string;
+  // }
 
-  let sort = '-price';
-  if (query.sort) {
-    sort = query.sort as string;
-  }
+  // const sortQuery = filterQuery.sort(sort);
 
-  const sortQuery = filterQuery.sort(sort);
+  // let page = 1;
+  // let limit = 0;
+  // let skip = 0;
 
-  let page = 1;
-  let limit = 1;
-  let skip = 0;
+  // if (query.limit) {
+  //   limit = Number(query.limit);
+  // }
 
-  if (query.limit) {
-    limit = Number(query.limit);
-  }
+  // if (query.page) {
+  //   page = Number(query.page);
+  //   skip = (page - 1) * limit;
+  // }
+  // const paginateQuery = sortQuery.skip(skip);
 
-  if (query.page) {
-    page = Number(query.page);
-    skip = (page - 1) * limit;
-  }
-  const paginateQuery = sortQuery.skip(skip);
+  // const limitQuery = await paginateQuery.limit(limit);
 
-  const limitQuery = await paginateQuery.limit(limit);
+  // return limitQuery;
 
-  return limitQuery;
+  const productsQuery = new QueryBuilder(Product.find(), query)
+    .search(productSearchAbleFields)
+    .filter()
+    .sort()
+    .paginate();
+
+  const result = await productsQuery.modelQuery;
+  return result;
 };
 
 const getSingleProductFromDb = async (id: string) => {
