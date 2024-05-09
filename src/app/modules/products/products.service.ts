@@ -7,17 +7,26 @@ const createProductIntoDb = async (payload: TProduct) => {
 };
 
 const getAllProductsFromDb = async (query: Record<string, unknown>) => {
+  console.log(query);
+  const queryObj = { ...query };
+
   const productSearchAbleFields = ['title', 'category'];
 
   let searchTerm = '';
   if (query?.searchTerm) {
     searchTerm = query?.searchTerm as string;
   }
-  const result = await Product.find({
+  const searchQuery = Product.find({
     $or: productSearchAbleFields.map((field) => ({
       [field]: { $regex: searchTerm, $options: 'i' },
     })),
   });
+
+  //filtering
+  const excludeFields = ['searchTerm', 'sort'];
+
+  excludeFields.forEach((el) => delete queryObj[el]);
+  const result = await searchQuery.find(queryObj);
 
   return result;
 };
