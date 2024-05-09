@@ -7,7 +7,6 @@ const createProductIntoDb = async (payload: TProduct) => {
 };
 
 const getAllProductsFromDb = async (query: Record<string, unknown>) => {
-  console.log(query);
   const queryObj = { ...query };
 
   const productSearchAbleFields = ['title', 'category'];
@@ -23,12 +22,37 @@ const getAllProductsFromDb = async (query: Record<string, unknown>) => {
   });
 
   //filtering
-  const excludeFields = ['searchTerm', 'sort'];
+  const excludeFields = ['searchTerm', 'sort', 'limit', 'page'];
 
   excludeFields.forEach((el) => delete queryObj[el]);
-  const result = await searchQuery.find(queryObj);
 
-  return result;
+  // sorting
+  const filterQuery = searchQuery.find(queryObj);
+
+  let sort = '-price';
+  if (query.sort) {
+    sort = query.sort as string;
+  }
+
+  const sortQuery = filterQuery.sort(sort);
+
+  let page = 1;
+  let limit = 1;
+  let skip = 0;
+
+  if (query.limit) {
+    limit = Number(query.limit);
+  }
+
+  if (query.page) {
+    page = Number(query.page);
+    skip = (page - 1) * limit;
+  }
+  const paginateQuery = sortQuery.skip(skip);
+
+  const limitQuery = await paginateQuery.limit(limit);
+
+  return limitQuery;
 };
 
 const getSingleProductFromDb = async (id: string) => {
