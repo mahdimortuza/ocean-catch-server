@@ -42,6 +42,8 @@ const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// updateSingleProductIntoDb
+
 const updateSingleProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await ProductServices.updateSingleProductIntoDb(id, req.body);
