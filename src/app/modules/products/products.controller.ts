@@ -55,6 +55,8 @@ const updateSingleProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// deleteSingleProductFromDb
+
 const deleteSingleProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await ProductServices.deleteSingleProductFromDb(id);
