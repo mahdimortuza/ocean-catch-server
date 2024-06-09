@@ -11,6 +11,7 @@ app.use(cookieParser());
 app.use(cors({ origin: 'http://localhost:3000' }));
 // app.use(cors({ origin: 'https://ocean-catch-client.vercel.app' }));
 
+// default route to check the api
 app.use('/api/v1', router);
 
 const response = 'Hello World!';
