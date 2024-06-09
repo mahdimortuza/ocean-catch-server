@@ -19,6 +19,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send(response);
 });
 
+// not found route added
 app.use(notFound);
 
 export default app;
